@@ -104,21 +104,6 @@ const AccidentDashboard = () => {
       {/* Controles */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6} md={3}>
-            <FormControl fullWidth>
-              <InputLabel>Año</InputLabel>
-              <Select
-                value={year || ''}
-                onChange={(e) => setYear(e.target.value)}
-                disabled={viewMode === 'multi'}
-              >
-                {years.map(y => (
-                  <MenuItem key={y} value={y}>{y}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
           <Grid xs={12} sm={6} md={2}>
             <FormControl fullWidth>
               <InputLabel>Tipo</InputLabel>
