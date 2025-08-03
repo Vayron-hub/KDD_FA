@@ -146,7 +146,7 @@ router.get('/multi-year', async (req, res) => {
                 'severity': `SELECT s.level_name AS label, n.year, COUNT(*) AS value
                 FROM non_fatal_accidents n
                 JOIN severity_levels s ON n.severity_id = s.severity_id
-                GROUP BY s.level_name, n.year
+                GROUP BY s.level_name, n.year,  s.severity_id
                 ORDER BY n.year, s.severity_id`,
 
                 'occupation': `SELECT o.occupation_name AS label, n.year, COUNT(*) AS value
@@ -244,6 +244,12 @@ router.get('/filter-options', async (req, res) => {
 router.get('/:accidentType/:segmentType', validateYear, async (req, res) => {
     const { accidentType, segmentType } = req.params;
     const year = req.validatedYear;
+
+    const segmentMapping = {
+    'accident-type': 'event-type'  // Normaliza a como está en la base de datos
+  };
+  
+  const normalizedSegment = segmentMapping[segmentType] || segmentType; 
 
     // Validación manual del accidentType
     if (!['fatal', 'non-fatal'].includes(accidentType)) {
