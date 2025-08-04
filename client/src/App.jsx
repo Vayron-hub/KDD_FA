@@ -97,110 +97,112 @@ const AccidentDashboard = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Dashboard de Accidentes Laborales
-      </Typography>
+      <div style={{ width: '100%' }}>
 
-      {/* Controles */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid xs={12} sm={6} md={2}>
-            <FormControl fullWidth>
-              <InputLabel>Tipo</InputLabel>
-              <Select
-                value={accidentType}
-                onChange={(e) => {
-                  setAccidentType(e.target.value);
-                  setSegmentType(e.target.value === 'fatal' ? 'industry' : 'age');
-                }}
-              >
-                <MenuItem value="non-fatal">No Fatales</MenuItem>
-                <MenuItem value="fatal">Fatales</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
+        <Typography sx={{ fontWeight: 'bold' }} variant="h4" gutterBottom>
+          Dashboard de Accidentes Laborales
+        </Typography>
 
-          <Grid xs={12} sm={6} md={3}>
-            <FormControl fullWidth>
-              <InputLabel>Segmentación</InputLabel>
-              <Select
-                value={segmentType}
-                onChange={(e) => setSegmentType(e.target.value)}
-              >
-                {segmentOptions.map(opt => (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <FormControl fullWidth>
-              <InputLabel>Año</InputLabel>
-              <Select
-                value={year || ''}
-                onChange={(e) => setYear(e.target.value)}
-                disabled={viewMode === 'multi' || years.length === 0}
-              >
-                {Array.isArray(years) && years.map(y => (
-                  <MenuItem key={y} value={y}>{y}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid xs={12} sm={6} md={4}>
-            <ToggleButtonGroup
-              value={viewMode}
-              exclusive
-              onChange={(e, newMode) => newMode && setViewMode(newMode)}
-              fullWidth
-            >
-              <ToggleButton value="single" disabled={!year}>
-                Vista por Año
-              </ToggleButton>
-              <ToggleButton value="multi">
-                Vista Multi-Año
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      {/* Resumen */}
-      {viewMode === 'single' && (
-        <Paper sx={{ p: 2, mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Resumen {year}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography>Accidentes Fatales: {summaryData.fatal || 0}</Typography>
+        {viewMode === 'single' && (
+          <Paper sx={{ p: 2, mb: 3,  }}>
+            <Typography variant="h3" gutterBottom>
+              Resumen {year}
+            </Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6} sx={{ display: 'flex' }}>
+                <Typography>Accidentes Fatales: </Typography>
+                <Typography sx={{fontWeight: 'bold'}}> {summaryData.fatal || 0} </Typography>
+              </Grid>
+              <Grid item xs={6} sx={{ display: 'flex' }}>
+                <Typography>Accidentes No Fatales: </Typography>
+                <Typography sx={{fontWeight: 'bold'}}> {summaryData.nonFatal || 0} </Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Typography>Accidentes No Fatales: {summaryData.nonFatal || 0}</Typography>
+          </Paper>
+        )}
+
+        <Paper sx={{ p: 2, mb: 3,  }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid xs={12} sm={6} md={2}>
+              <FormControl fullWidth>
+                <InputLabel>Tipo</InputLabel>
+                <Select
+                  value={accidentType}
+                  onChange={(e) => {
+                    setAccidentType(e.target.value);
+                    setSegmentType(e.target.value === 'fatal' ? 'industry' : 'age');
+                  }}
+                >
+                  <MenuItem value="non-fatal">No Fatales</MenuItem>
+                  <MenuItem value="fatal">Fatales</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <FormControl fullWidth>
+                <InputLabel>Segmentación</InputLabel>
+                <Select
+                  value={segmentType}
+                  onChange={(e) => setSegmentType(e.target.value)}
+                >
+                  {segmentOptions.map(opt => (
+                    <MenuItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <FormControl fullWidth>
+                <InputLabel>Año</InputLabel>
+                <Select
+                  value={year || ''}
+                  onChange={(e) => setYear(e.target.value)}
+                  disabled={viewMode === 'multi' || years.length === 0}
+                >
+                  {Array.isArray(years) && years.map(y => (
+                    <MenuItem key={y} value={y}>{y}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid xs={12} sm={6} md={4}>
+              <ToggleButtonGroup
+                value={viewMode}
+                exclusive
+                onChange={(e, newMode) => newMode && setViewMode(newMode)}
+                fullWidth
+              >
+                <ToggleButton value="single" disabled={!year}>
+                  Vista por Año
+                </ToggleButton>
+                <ToggleButton value="multi">
+                  Vista Multi-Año
+                </ToggleButton>
+              </ToggleButtonGroup>
             </Grid>
           </Grid>
         </Paper>
-      )}
+        <Paper sx={{ p: 2,  }} >
+          <Typography variant="h6" gutterBottom>
+            {accidentType === 'fatal' ? 'Accidentes Fatales' : 'Accidentes No Fatales'} -
+            {viewMode === 'multi' ? ' Evolución por Años' : ` Segmentación por ${segmentOptions.find(opt => opt.value === segmentType)?.label} (${year})`}
+          </Typography>
 
-      {/* Gráfico */}
-      <Paper sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          {accidentType === 'fatal' ? 'Accidentes Fatales' : 'Accidentes No Fatales'} -
-          {viewMode === 'multi' ? ' Evolución por Años' : ` Segmentación por ${segmentOptions.find(opt => opt.value === segmentType)?.label} (${year})`}
-        </Typography>
-
-        <ChartRenderer
-          data={chartData}
-          segmentType={segmentType}
-          loading={loading}
-          error={error}
-          isMultiYear={viewMode === 'multi'}
-        />
-      </Paper>
+          <ChartRenderer
+            data={chartData}
+            segmentType={segmentType}
+            loading={loading}
+            error={error}
+            isMultiYear={viewMode === 'multi'}
+          />
+        </Paper>
+      </div>
     </Box>
   );
 };
